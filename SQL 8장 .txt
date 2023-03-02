@@ -1,0 +1,48 @@
+8장 조인과 다중 테이블
+
+ 조인 >> 필요성
+   조인의 개념
+    - 집합 A와 B사이의 관계 R = A X B 의 부분집합
+    - 조인 집합의 곱을 수행 A X B
+
+
+ 조인 >> CROSS 조인
+   테이블의 모든 행을 곱하여 곱집합을 만드는 것
+    ex) SELECT toys.toy, boys.boy FROM toys CROSS JOIN boys;
+      -> toys에 8개 boys에 6개의 자료가 있다면 48개의 자료가 생김
+
+
+ 유용한 기법 >> 별명(alias)
+   - 테이블 명이나 칼럼명에 별명을 설정해 줄 수 있음 AS
+   - 사용이 정의 보다 먼저 나와도 된다.
+   - 중복되는 칼럼명 X -> 별명 안써도 O
+    ex) SELECT t.toy, b.boy FROM toys AS t CROSS JOIN boys AS b ORDER BY b.boy,t.toy;
+
+
+ 조인  >> 내부(INNER) 조인
+   - 테이블의 모든 행을 곱하는 주어진 조건에 맞는 것만 돌려줌
+    ->두개의 분리되어있는 테이블에서 동일한 칼럼을 이용한 결합이 가능
+   - 조건은 논리 연산을 사용하면 되지만 일반적으로 '같다'(동등조인 ON )이 사용됨
+       SELECT somecolumn FROM table1 INNER JOIN table2 ON somecodition;
+       SELECT b.boy, t.toy FROM boys AS b INNER JOIN toys  AS t ON b.toy_id=t.toy_id;
+
+
+ 조인  >> 자연(NATURAL)조인
+   - 테이블의 동일한 이름의 칼럼이 있을때 동등 INNER 조인을 해줌
+      SELECT b.boy, t.toy FROM boys AS b NATURAL JOIN toys AS t;
+   - 같은 이름으로 되있는 칼럼(기본키,참조키) 1개만 있을 경우 사용(딱 1쌍)
+
+
+   INNER JOIN으로 출력 
+   ex) SELECT mc.first_name, se.seeking(관심사),st.status(신분상태) FROM
+        ((my_contacts AS mc INNER JOIN contact_seeking AS cs ON mc.contact_id = cs.contact_id)
+        INNER JOIN seeking AS se ON se.seeking_id = cs.seeking_id))
+        INNER JOIN status AS st ON st.status_id = mc.status_id;
+
+    NATURAL JOIN으로 출력
+   ex) SELECT mc.first_name, se.seeking(관심사),st.status(신분상태) FROM
+        my_contacts AS mc NATURAL  JOIN contact_seeking AS cs NATURAL JOIN seeking AS se NATURAL  JOIN status AS st;
+
+
+
+
