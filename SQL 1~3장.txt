@@ -1,0 +1,98 @@
+    모든 문장에는 마지막에 세미콜론( ; )을 붙인다 ! !
+    키워드는 대문자, 임의로 작성하는 이름(테이블, 칼럼명 등)
+
+CREATE DATABASE list;     // 1. list 라는 데이터 베이스를 만듬 
+
+USE list;                        // 2. 데이터 베이스 list 를 사용함 USE해줘야만 이 안에 있는 테이블에 *접근* 할수 있다
+
+SHOW DATABASES;         // 3. 시스템에 어떠한 데이터 베이스들이 있는지 알고 싶은면 
+
+CREATE TABLE list_table (name VARCHAR(10), age INT, kgg DEC(3.2), day DATE);     // 4. 테이블 생성 <자료형 ★>
+        - 사용자에 대한 요구분석이 우선이다.
+        - 테이블은 행(한 객체에 대한 속성을 나타냄)과 열(테이블의 저장된 하나의 데이터)로 구성 
+
+CREATE TABLE list_table (name VARCHAR(10) NOT NULL, age INT NOT NULL);
+      * 테이블의 칼럼이 NULL을 가질수 없도록 강제화 시킬수 있음 ( NOT NULL)  <- 칼럼값 주지 않으면 에러
+CREATE TABLE list_table (name VARCHAR(10) NOT NULL, age INT NOT NULL DEFAULT 1.00);
+      * 입력시 칼럼 값 누락하면 디폴트 ( DEFAULT )값 가지게 할수도 있음 
+ 
+
+DESC list_table;              // 5. 테이블( list_table) 이 잘 만들어 졌는지 'DESC' 확인
+  
+★ INSERT문 사용  예)4.  (name VARCHAR(10), age INT, kgg DEC(3.2), day DATE)
+
+INSERT INTO list_table VALUE('안요셉',23, 68.8, '2022-10-16');                       // 1. 열 이름 생략 ( 모든 값들을 테이블 안에 들어있는 순서대로 포함 해야 한다)
+INSERT INTO list_table (name, age, day)  VALUE ( '장재혁',24,'2022-10-15');      // 2. 몇개의 열 생략넣고자 하는 열만 따로 입력 가능하다. (생략된 것의 갑은 NULL이 된다)
+INSERT INTO list_table (age, day, name, kgg) VALUE ( 24, '2022-10-13', '노시헌', 85);     // 3. 테이블의 열 순서 변경 하더라고 값과 짝이 맞으면 상관이 없다.
+
+  참고) 문장 입력할 때 여러줄에 걸쳐 입력(수정 등 편리) 
+
+DROP TABLE ilst_table;  // 테이블 삭제 (테이블 내용도 함께 삭제됨)
+DROP DATABASE ilst;    // 데이터베이스가 삭제된다. 
+
+<SELECT>
+SELECT*FROM list_table;                         // 테이블의 전체의 내용 보여준다 * 전체
+SELECT*FROM list_table WHERE age <=23;       //조건에 맞는 레코드 추출 ( WHERE (=, <>(부등호), <, <=, >, >= 사용가능 )
+SELECT*FROM list_table WHERE name ='안요셉';
+
+SELECT name, age FROM list_table;  // 칼럼명을 명시함으로써 해당 칼럼에 대한 자료만 추출, 열의 순서는 원하는 순서대로 기입 하면 됨
+
+논리연산자( AND, OR, NOT) 사용가능
+NULL 사용 X -> IS NULL(널 이면), IS NOT NULL(널이 아니면)
+
+LIKE 와일드 문자 (IN 사용X)-> OR 사용
+- % 여러문자 와일드 
+   SELECT*FROM my_contacts WHERE location LIKE '%ca';  //location이 ca로 끝나는 거만 추출
+- _ 한문자 와일드
+   SELECT first_name FROM my_contacts WHERE first_name LIKE '_im';  //first_name이 im로 끝나는 거만 추출
+
+BETWEEN 일정 값의 사이 값을 나타낼때 
+  WHERE calories >=30 AHD calories <=60;
+=> WHERE calories BETWEEN 30 AHD 60;
+
+IN 문장
+여러개의 조건 OR 대신 IN사용
+WHERE calories IN('yosep', 'jaeh', 'jinsung');
+
+DELETE (테이블에사 지정된 행을 삭제)
+ WHERE 절을 사용하여 원하는 레코드 삭제 대상 지정
+
+UPDATE (어떤 행(레코드)내용을 갱신
+ UPDATE doughunt_ratings 
+ SET type = glazed (배정문)  
+ WHERE type = plain glazed; (조건)
+
+SET에 여려 개의 열 명시 가능
+UPDAT Eyour_table
+SET first_column= ‘newvalue’,  second_column= ‘another_value’  3장
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
