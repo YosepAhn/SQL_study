@@ -1,0 +1,107 @@
+9장 
+JOIN 논리 복잡할 수 있음
+서브쿼리 >> 필요성
+ N+N=2N 효율성이 좋음
+
+서브 쿼리(내부 쿼리) 사용 
+  - 서브쿼리 언어 먼저 싱핼된다
+  - 서브쿼리 내에서 = (한명만 있을때) IN (여러명 있을 때)
+
+ <문제 1>
+   profession이‘Computer Programmer’ 인사람의이름(first_name, last_name)과연락처(phone)를알고싶음    
+
+  INNER JOIN 사용
+   1) SELECT first_name,last_name,phone FROM my_contacts mc INNER JOIN profession p ON mc.prof_id=p.prof_id 
+      WHERE profession='Computer Programmer';
+ 
+  NATURAL JOIN 사용
+   1) SELECT first_name, last_name FROM my_contacts NATURAL JOIN profession 
+      WHERE profession='Computer programmer'; 
+
+  서브 쿼리(내부 쿼리) 사용
+   1) SELECT first_name, last_name, phone FROM my_contacts WHERE prof_id = 
+      (SELECT prof_id FROM profession WHERE profession='Computer Programmer')
+
+
+  <문제 2>
+    5년이상경력에, $105,000 이하연봉에웹개발자(Web Designer) 자리를원하는사람을찾고싶음(first_name, last_name, phone 정보가필요)
+
+  INNER JOIN 사용
+    2) SELECT first_name, last_name, phone FROM my_contacts mc INNER JOIN job_desired jd ON mc.contact_id = jd.contact_id 
+      WHERE years_exp >=5 AND salary_low <=105000 AND title='Web Designer'; 
+
+  NATURAL JOIN 사용
+    2) SELECT first_name, last_name, phone FROM my_contacts NATURAL JOIN Job_desired 
+      WHERE years_exp >=5 AND salary_low <=105000 AND title='Web Designer';
+
+  서브 쿼리(내부 쿼리) 사용 
+    2) SELECT first_name, last_name, phone FROM my_contacts WHERE contact_id = 
+      (SELECT contact_id FROM Job_desired WHERE years_exp >=5 AND salary_low <=105000 AND title='Web Designer');
+
+  
+  <문제 3>
+    직업리스팅(job_listings) 에서어떤직업의사람을원하는지를파악하여이에해당하는사람(그직업을원하는사람) 들의이름(first_name, last_name)과연락처(phone), 및 직업(title) 을알고싶음 
+
+  NATURAL JOIN 사용
+    3) SELECT mc.first_name, mc.last_name, mc.phone,title FROM job_listings jl NATURAL JOIN job_desired jd NATURAL JOIN my_contacts mc;
+   
+  서브쿼리와 조안 동시 사용
+    3) SELECT title, first_name, last_name, phone FROM my_contacts NATURAL JOIN job_desiredjd
+        WHERE jd.title 
+        IN(SELECT title FROM job_listings);
+
+ 1-N 관계에서 (비상관)서브쿼리 
+
+  ex) Woodstock (city) NY (state) 에 사는 모든 사람을 알고 싶을 때 내리는 전형적인 쿼리
+
+   서브 트리 쿼리 (2. 추출 정보있는 칼럼 테이블 WHERE(참조키)  1. 조건을 먼저 구한다(기본키))  
+
+       SELECT first_name, last_name FROM my_contacts  WHERE zip_code 
+       IN(SELECT zip_code FROM zip_code WHERE city='Woodstock' AND state='NY')
+
+   JOIN을 사용한 쿼리 ( 2개의 테이블을 JOIN 다음 WHERE에 조건 ) 
+
+      SELECT first_name, last_name FROM my_contacts NATURAL JOIN zip_code WHERE city='Woodstock' AND state='NY';
+
+
+ N-N관계에서의 (비상관)서브 쿼리
+   ex) 관심사(interest)가 RPG인 모든 사람의 리스트를 구하려면?
+
+    서브 트리 쿼리 ( 3. 추출 정보있는 칼럼 테이블 WHERE(기본키)  2. 조건과 관계테이블(참조키) <-1. 조건(기본키) ) 
+
+       SELECT first_name, last_name FROM my_contacts WHERE contact_id 
+       IN(SELECT contact_id FROM contact_interest WHERE interest_id 
+       IN(SELECT      interest_id FROM interests WHERE interest='RPG'));
+
+    JOIN을 사용한 쿼리 ( 3개의 테이블을 JOIN -> WHERE 조건) + 조인 순서 ( 정보추출테이블 - 관계테이블 - 조건테이블)
+       SELECT mc.first_name, mc.last_name FROM my_contacts mc NATURAL JOIN contact_interest ci NATURAL JOIN interests i WHERE i.interest='RPG';
+
+
+   서브쿼리로는 오직 SELECT 만 사용
+  - 서브퀴리는 항상 괄호안에 넣어주어야 함
+  - 서브쿼리는 INSERT, DELETE, UPDATE 와도 함께 사용될 수 있음
+   
+  ex) CA (state)에 사는 모든 사람들의 연봉을 10% 올려주려고 함 ( N-N관계 )
+    
+     1. 수정이 필요한 테이블 ( 2. 관계 테이블과 ( 1. 조건 테이블 ) ) 
+   
+      UPDATE job_current  
+      SET salary = salay*1.1 
+      WHERE contact_id  
+      IN(SELECT contact_id FROM my_contacts WHERE zip_code 
+      IN(SELECT zip_code FROM   zip_code WHERE state ='CA')); 
+
+
+  서브쿼리는 하나의 값 또는 여러 개의 값을 반환
+  여러개의 자료를 반환하는 경우 IN
+   
+     하나의 값만을 리턴해야 함 =
+
+  + 에러 방지를 위해서 IN만 쓰자 !!
+  
+    별명의 사용이 괄호안으로 제한 됨 (지역변수와 같은 개념)
+    ex)SELECT mc.last_name, mc.first_name FROM my_contacts AS mc WHERE mc.contact_id 
+          =(SELECT jc.contact_id FROM job_current AS jc WHERE jc.salary 
+          =(SELECT MAX(salary) FROM jc))
+
+
