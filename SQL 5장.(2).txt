@@ -1,0 +1,43 @@
+5장
+문자열 관련 함수 >> 일부분 추출
+
+  SUBSTRING
+    - SUBSTRING (칼럼명, 시작지점, 길이)
+      ex) SELECT SUBSTRING ("1234567890",3,5);  // 문자열(칼럼명), 시작, 길이
+          SELECT SUBSTRING (name ,3);    // 문자열(칼럼명),시작 명시
+           // 길이 명시 안하면 그 위치로부터 끝까지 추출
+           // 첫 번째의 위치는 1부터 ( 0 아님)
+           // 시작지점에 마이너스 값을 주면   
+              SELECT SUBSTRING("1234567890",-7,5);  // 45678 추출
+ 
+  SUBSTRING_INDEX
+    - SUBSTRING_INDEX (칼럼명, 구분자, num);  // 구분자로 구분하여 num번째 나온 구분자 이전의 문자열 반환
+     ex) SUBSTRING_INDEX (location, ',', 1); FROM my_table; 
+         구리시, 경기도 = 구리시 추출
+         SELECT SUBSTRING_INDEX("1253846775890",'5',1); // 12 추출 // 구분자로 구분하여 num번째 나온 구분자 이전의 문자열 반환
+    - 마이너스 (-) : 끝에서 num번째 나온 구분자 이후의 문자열 반환
+     ex) SELECT SUBSTRING_INDEX("1253846775890",'5',-1);  // 890 추출 
+ 
+  LEFT, RIGHT)    -LEFT(your_string,2)  //문자열의 왼쪽(오른쪽) 부터 2문자만 추출
+     ex) SELECT LEFT("123456789", 2);  // 12 추출
+          SELECT RIGHT("123456789", 4);  // 6789 추출
+     주의) 함수 이름 옆에 공백이 있을 경우 에러 생길수 있다.
+
+문자열 관련 함수 >> 유용한 함수 
+   (문자 함수는 테이블의 저장되어 있는 데이터를 바꾸지 않는다. 쿼리의 결과로 변경된 문자열을 반환할 뿐)
+
+  - 대소문자 변환 (UPPER, LOWER)
+      UPPER(your_string); // 주어진 문자열을 대문자로 반환   
+      LOWER(your_string); // 주어진 문자열을 소문자로 반환 
+ 
+  - 거꾸로 순서 (REVERSE)
+      REVERSE(your_string);  //문자열의 순서가 역순으로 반환
+  
+  - 공백문자 제거 (LTRIM, RTRIM, TRIM)
+      ex) SELECT TRIM(UPPER(SUBSTRING_INDEX("ahn,yosep",',',1)));  // AHN 추출
+
+  - 문자열의 길이 반환 (LENGHT)
+      ex) LENGTH("Ahn yo sep");  // 10 추출
+    
+  - 문자열의 연결 (CONCAT)
+   ex) CONCAT("1234", "5678");  // 12345678 추출
