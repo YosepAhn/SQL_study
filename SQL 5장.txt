@@ -1,0 +1,52 @@
+5장  
+ALTER
+ ALTER를 사용하여 DB테이블의 구조 고칠 수 있음
+  - 칼럼의 형식, 위치 수정 가능
+  - 칼럼의 추가 삭제 가능
+  - 데이터를 잃을 수도 았으니 조심
+ALTER TABLE my_contacts
+ADD COLUMN contact_id INT NOT NULL AUTO_INCREMENT FIRST,
+ADD PRIMARY KEY(contact_id);
+ - 칼럼 한개를 테이블 맨 앞에 추가
+ - 이를 자동 증가 기본키로 만들었다.
+
+위치 지정 방법
+FIRST, AFTER 칼럼명을 사용할수 있음
+
+AFTER 다음에 아래 키워드 사용 하여 테아블의 구조 변경 가능
+  CHANGE : 기존 열의 이름과 데이터 타입을 바꾸어줌
+  MODIFY  : 기존 열의 데이터 타입이나 위치를 변경
+  ADD :  테이블에 열을 추가
+  DROP : 테이블의 열을 제거
+
+CHANGE 와 MODIFY 의 차이
+   - CHANGE 는 칼럼의 이름을 포함하여 그 칼럼 모두를 새로 정의 *(이름) 
+   - 둘 다 칼럼의 위치 변경 가능
+
+테이블 자체의 이름을 바꾸려면 다음과 같은 명령어 사용
+  ALTER TABLE projekts RENAME TO project_list;
+
+CHANG COLUMN(칼럼의 이름을 포함하여 구조 변경)
+ - 단일 칼럼 변경
+    ALTER TABLE project_list;
+    CHANGE COLUMN number proj_id INT NOT NULL AUTO_INCREMENT FIRST,
+    ADD PRIMARY KEY(proj_id);
+    number라는 칼럼의 이름을 proj_id 로 고치고 이 칼럼을 자동 증다되는 기본키로 만듦
+ - 복수 개의 칼럼 변경
+    ALTER TABLE project_list;
+    CHANGE COLUMN number proj_id VARCHAR(100),
+    CHANGE COLUMN contractoronjob con_name VARCHAR(30)
+    하나의 ALTER 문에서 여려개의 CHANGE, MODIFY, ADD, DROP 사브 문장 사용 가능
+
+MODIFY COLUMN(칼럼의 이름은 그냥 둔 채, 구조만 바꿈)
+   ALTER TABLE project_list;
+   MODIFY COLUMN proj_desc VARCHAR(100),
+
+ADD COLUMN (새로운 칼럼, 기본키 등을 추가)
+
+DROP COLUMN(명시된 칼럼을 제거)
+
+
+
+
+
